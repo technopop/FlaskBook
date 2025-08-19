@@ -1,0 +1,20 @@
+# Python / Flask
+__pycache__/
+*.py[cod]
+*.env
+.env
+instance/
+*.sqlite
+
+# アップロード類（フォルダは残し中身は無視）
+images/*
+!images/.gitkeep
+
+# 仮想環境
+venv/
+.venv/
+
+# エディタ・OS
+.vscode/
+.DS_Store
+Thumbs.db
