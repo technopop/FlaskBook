@@ -5,6 +5,7 @@ __pycache__/
 .env
 instance/
 *.sqlite
+local.sqlite
 
 # アップロード類（フォルダは残し中身は無視）
 images/*
