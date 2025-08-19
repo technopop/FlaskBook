@@ -24,7 +24,7 @@ class UserForm(FlaskForm):
         "パスワード", validators=[DataRequired(message="パスワードは必須です")]
     )
 
-    submit = SubmitField("新規登録")
+    submit = SubmitField("ログイン")
 
 
 class SignUpForm(FlaskForm):
@@ -48,6 +48,8 @@ class SignUpForm(FlaskForm):
         "パスワード", validators=[DataRequired("パスワードは必須です")]
     )
 
+    submit = SubmitField("新規登録")
+
 
 class LoginForm(FlaskForm):
     email = StringField(
@@ -62,4 +64,4 @@ class LoginForm(FlaskForm):
         "パスワード", validators=[DataRequired("パスワードは必須です")]
     )
 
-    submit = SubmitField("新規登録")
+    submit = SubmitField("ログイン")
