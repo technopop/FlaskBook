@@ -22,3 +22,6 @@ Thumbs.db
 
 # ignore model file
 model.pt
+
+# OS
+.DS_Store
