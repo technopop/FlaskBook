@@ -22,7 +22,7 @@ from apps.crud.models import User
 
 import uuid
 from pathlib import Path
-from apps.detector.forms import UploadImageForm
+from apps.detector.forms import UploadImageForm, DetectorForm
 from flask_login import current_user, login_required
 
 
@@ -37,7 +37,22 @@ def index():
         .filter(User.id == UserImage.user_id)
         .all()
     )
-    return render_template("detector/index.html", user_images=user_images)
+
+    user_image_tag_dict = {}
+    for user_image in user_images:
+        user_image_tags = (
+            db.session.query(UserImageTag)
+            .filter(UserImageTag.user_image_id == user_image.UserImage.id)
+            .all()
+        )
+        user_image_tag_dict[user_image.UserImage.id] = user_image_tags
+    detector_form = DetectorForm()
+    return render_template(
+        "detector/index.html",
+        user_images=user_images,
+        user_image_tag_dict=user_image_tag_dict,
+        detector_form=detector_form,
+    )
 
 
 @dt.route("/images/<path:filename>")
