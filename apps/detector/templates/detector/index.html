@@ -35,7 +35,7 @@
     </section>
     <footer>
         {% for tag in user_image_tag_dict[user_image.UserImage.id] %}
-        #{{ tag.tag_name }}
+        {{ tag.tag_name }}
         {% endfor %}
     </footer>
 </div>
