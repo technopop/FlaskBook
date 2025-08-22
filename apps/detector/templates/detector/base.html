@@ -11,22 +11,17 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbarbrand " href="{{ url_for('detector.index') }}">detector</a>
+            <a class="navbar-brand" href="{{ url_for('detector.index') }}">detector</a>
             <!--画像検索フォーム-->
-            {% if url_for(request.endpoint)==url_for('detector.index') or
-            url_for('request.endpoint')==url_for('detector.search') %}
+            {% if request.endpoint in ['detector.index', 'detector.search'] %}
             <div class="btn-group">
                 <form action="{{ url_for('detector.search') }}" method="GET" name="dtSearchForm">
-                    {% if request.args.get("search") %}
                     <input type="search" id="dt-search" class="form-control col-md-12 dt-search" placeholder="検索"
-                        name="search" value="{{ request.args.get('search') }}" />
-                    {% else %}
-                    <input type="search" id="dt-search" class="form-control col-md-12 dt-search" placeholder="検索"
-                        name="search" value="{{ request.args.get('search') }}" />
-                    {% endif %}
+                        name="search" value="{{ request.args.get('search') or '' }}" />
                 </form>
             </div>
             {% endif %}
+
             <ul class="navbar-nav">
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
