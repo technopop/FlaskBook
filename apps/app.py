@@ -37,4 +37,14 @@ def create_app(config_key):
     app.register_blueprint(crud_views.crud, url_prefix="/crud")
     app.register_blueprint(auth_views.auth, url_prefix="/auth")
     app.register_blueprint(dt_views.dt)
+    app.register_error_handler(404, page_not_fonund)
+    app.register_error_handler(500, internal_server_error)
     return app
+
+
+def page_not_fonund(e):
+    return render_template("404.html"), 404
+
+
+def internal_server_error(e):
+    return render_template("500.html"), 500

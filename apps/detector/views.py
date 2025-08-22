@@ -261,3 +261,8 @@ def search():
             detector_form=detector_form,
         )
     return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+
+
+@dt.errorhandler(404)
+def page_not_found(e):
+    return render_template("detector/404.html"), 404
