@@ -2,6 +2,7 @@ import random
 import cv2
 import numpy as np
 import torch
+import os
 import torchvision
 
 from flask import (
@@ -27,6 +28,10 @@ from flask_login import current_user, login_required
 
 
 dt = Blueprint("detector", __name__, template_folder="templates")
+BASE_DIR = os.path.dirname(__file__)
+MODEL_PATH = os.path.join(BASE_DIR, "model.pt")
+model = torch.load(MODEL_PATH, weights_only=False)
+model = model.eval()
 
 
 @dt.route("/")
@@ -94,10 +99,10 @@ def make_line(result_image):
 
 def draw_lines(c1, c2, result_image, line, color):
     cv2.rectangle(result_image, c1, c2, color, thickness=line)
-    return cv2
+    return result_image  # 画像を返す
 
 
-def draw_texts(result_image, line, c1, cv2, color, labels, label):
+def draw_texts(result_image, line, c1, color, labels, label):
     display_txt = f"{labels[label]}"
     font = max(line - 1, 1)
     t_size = cv2.getTextSize(display_txt, 0, fontScale=line / 3, thickness=font)[0]
@@ -110,11 +115,11 @@ def draw_texts(result_image, line, c1, cv2, color, labels, label):
         0,
         line / 3,
         [255, 255, 255],
-        thinkness=font,
+        thickness=font,
         lineType=cv2.LINE_AA,
     )
 
-    return cv2
+    return result_image
 
 
 def exec_detect(target_image_path):
@@ -122,8 +127,8 @@ def exec_detect(target_image_path):
     image = Image.open(target_image_path)
     image_tensor = torchvision.transforms.functional.to_tensor(image)
 
-    model = torch.load(Path(current_app.root_path, "detector", "model.pt"))
-    model = model.eval()
+    # model = torch.load(Path(current_app.root_path, "detector", "model.pt"))
+    # model = model.eval()
     output = model([image_tensor])[0]
 
     tags = []
@@ -135,8 +140,8 @@ def exec_detect(target_image_path):
             line = make_line(result_image)
             c1 = (int(box[0]), int(box[1]))
             c2 = (int(box[2]), int(box[3]))
-            cv2 = draw_lines(c1, c2, result_image, line, color)
-            cv2 = draw_texts(result_image, line, c1, cv2, color, labels, label)
+            result_image = draw_lines(c1, c2, result_image, line, color)
+            result_image = draw_texts(result_image, line, c1, color, labels, label)
             tags.append(labels[label])
 
     detected_image_file_name = str(uuid.uuid4()) + ".jpg"

@@ -1,9 +1,10 @@
-from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField
+# from flask_wtf import FlaskForm
+from flask_wtf.form import FlaskForm
+from wtforms.fields.simple import PasswordField, StringField, SubmitField
+
+# from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, length
 from flask_wtf.file import FileAllowed, FileField, FileRequired
-from flask_wtf.form import FlaskForm
-from wtforms.fields.simple import SubmitField
 
 
 class UserForm(FlaskForm):
@@ -43,3 +44,7 @@ class UploadImageForm(FlaskForm):
 
 class DetectorForm(FlaskForm):
     submit = SubmitField("検知")
+
+
+class DeleteForm(FlaskForm):
+    submit = SubmitField("削除")

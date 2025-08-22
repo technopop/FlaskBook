@@ -15,14 +15,16 @@
 </div>
 {% for user_image in user_images %}
 <div class="card col-md-7 dt-image-content">
-    <header class="d-flex justify-contant-between">
+    <header class="d-flex justify-content-between">
         <div class="dt-image-username">{{ user_image.User.username }}</div>
         <div class="d-flex flex-row-reverse">
             <div class="p-2">
                 <form action="{{ url_for('detector.detect', image_id=user_image.UserImage.id) }}" method="POST">
                     {{ detector_form.csrf_token }}
                     {% if current_user.id==user_image.User.id and user_image.UserImage.is_detected==False %}
-                    {{detector_form.submit(class="btn btn-primary",disabled="disabled")}}
+                    {{ detector_form.submit(class="btn btn-primary") }}
+                    {% else %}
+                    {{ detector_form.submit(class="btn btn-primary",disabled="disabled") }}
                     {% endif %}
                 </form>
             </div>
