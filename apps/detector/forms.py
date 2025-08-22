@@ -38,7 +38,7 @@ class UploadImageForm(FlaskForm):
             FileAllowed(["png", "jpg", "jpeg"], "サポートされていない形式です"),
         ]
     )
-
+    # user_id,image_pathがないので、views.pyでエラー
     submit = SubmitField("アップロード")
 
 

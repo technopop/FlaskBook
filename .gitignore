@@ -6,10 +6,12 @@ __pycache__/
 instance/
 *.sqlite
 local.sqlite
+*.pyc
 
 # アップロード類（フォルダは残し中身は無視）
 images/*
 !images/.gitkeep
+apps/images/
 
 # 仮想環境
 venv/
