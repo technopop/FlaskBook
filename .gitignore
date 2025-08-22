@@ -7,6 +7,8 @@ instance/
 *.sqlite
 local.sqlite
 *.pyc
+*.pyo
+*.pyd
 
 # アップロード類（フォルダは残し中身は無視）
 images/*
@@ -15,15 +17,28 @@ apps/images/
 
 # 仮想環境
 venv/
+env/
 .venv/
+.env/
 
 # エディタ・OS
 .vscode/
 .DS_Store
 Thumbs.db
+.idea/
 
 # ignore model file
 model.pt
 
 # OS
 .DS_Store
+
+# ログや一時ファイル
+*.log
+*.tmp
+
+# Python関連
+*.egg-info/
+.eggs/
+dist/
+build/
