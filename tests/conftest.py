@@ -2,55 +2,49 @@ import os
 import shutil
 
 import pytest
-
 from apps.app import create_app, db
 from apps.crud.models import User
 from apps.detector.models import UserImage, UserImageTag
 
 
-@pytest.fixture
-def app(tmp_path):
-    # テスト用アプリ作成
-    app = create_app("testing")
-
-    # テストごとに固有のアップロード先を割り当て
-    upload_dir = tmp_path / "uploads"
-    upload_dir.mkdir(parents=True, exist_ok=True)
-    app.config["UPLOAD_FOLDER"] = str(upload_dir)
-
-    # DBのセットアップ
-    with app.app_context():
-        db.create_all()
-        yield app
-        # テスト後始末：セッション掃除→DBを落とす
-        db.session.remove()
-        db.drop_all()
-
-
+# フィクスチャ関数を作成する
 @pytest.fixture
 def fixture_app():
+    # セットアップ処理
+    # テスト用のコンフィグを使うために引数にtestingを指定する
     app = create_app("testing")
 
+    # データベースを利用するための宣言をする
     app.app_context().push()
 
+    # テスト用データベースのテーブルを作成する
     with app.app_context():
         db.create_all()
 
-    os.makedirs(app.config["UPLOAD_FOLDER"])
+    # テスト用の画像アップロードディレクトリを作成する
+    os.mkdir(app.config["UPLOAD_FOLDER"])
 
+    # テストを実行する
     yield app
 
+    # クリーンナップ処理
+    # userテーブルのレコードを削除する
     User.query.delete()
 
+    # user_imageテーブルのレコードを削除する
     UserImage.query.delete()
 
+    # user_image_tagsテーブルのレコードを削除する
     UserImageTag.query.delete()
 
+    # テスト用の画像アップロードディレクトリを削除する
     shutil.rmtree(app.config["UPLOAD_FOLDER"])
 
     db.session.commit()
 
 
+# Flaskのテストクライアントを返すフィクスチャ関数を作成する
 @pytest.fixture
-def client(app):
-    return app.test_client()
+def client(fixture_app):
+    # Flaskのテスト用クライアントを返す
+    return fixture_app.test_client()
