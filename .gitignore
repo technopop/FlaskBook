@@ -42,3 +42,4 @@ model.pt
 .eggs/
 dist/
 build/
+.coverage
