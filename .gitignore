@@ -43,3 +43,4 @@ model.pt
 dist/
 build/
 .coverage
+apps/__pycache__/config.cpython-313.pyc
