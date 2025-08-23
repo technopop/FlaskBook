@@ -5,8 +5,8 @@ def test_index(client):
 
 
 def signup(client, username, email, password):
-    deta = dict(username=username, email=email, password=password)
-    return client.post("/auth/sigup", data=deta, follow_redirects=True)
+    data = dict(username=username, email=email, password=password)
+    return client.post("/auth/signup", data=data, follow_redirects=True)
 
 
 def test_index_signup(client):
