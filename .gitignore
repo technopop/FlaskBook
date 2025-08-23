@@ -44,3 +44,4 @@ dist/
 build/
 .coverage
 apps/__pycache__/config.cpython-313.pyc
+apps/detector/__pycache__/models.cpython-313.pyc

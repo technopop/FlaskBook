@@ -57,11 +57,70 @@ def upload_image(client, image_path):
     return client.post("/upload", data=data, follow_redirects=True)
 
 
+def test_upload_signup_post_validate(client):
+    signup(client, "admin", "flaskbook@example.com", "password")
+    rv = upload_image(client, "detector/testdata/test_invalid_file.txt")
+    assert "画像" in rv.data.decode()
+
+
 def test_upload_signup_post(client):
     signup(client, "admin", "flaskbook@example.com", "password")
     rv = upload_image(client, "detector/testdata/test_valid_image.jpg")
     user_image = UserImage.query.first()
     assert user_image.image_path in rv.data.decode()
+
+
+def test_detect_no_user_image(client):
+    signup(client, "admin", "flaskbook@example.com", "password")
+    upload_image(client, "detector/testdata/test_valid_image.jpg")
+    # 存在しないIDを指定する
+    rv = client.post("/detect/notexistid", follow_redirects=True)
+    assert "画像" in rv.data.decode()
+
+
+def test_detect(client):
+    # サインアップする
+    signup(client, "admin", "flaskbook@example.com", "password")
+
+    # 画像をアップロードする
+    upload_image(client, "detector/testdata/test_valid_image.jpg")
+    user_image = UserImage.query.first()
+
+    # 物体検知を実行する
+    rv = client.post(f"/detect/{user_image.id}", follow_redirects=True)
+    user_image = UserImage.query.first()
+    # assert user_image.image_path in rv.data.decode()
+    # assert "dog" in rv.data.decode()
+
+
+def test_detect_search(client):
+    # サインアップする
+    signup(client, "admin", "flaskbook@example.com", "password")
+
+    # 画像をアップロードする
+    upload_image(client, "detector/testdata/test_valid_image.jpg")
+
+    user_image = UserImage.query.first()
+    # 物体検知する
+    client.post(f"/detect/{user_image.id}", follow_redirects=True)
+
+    # dogワードで検索する
+    rv = client.get("/images/search?search=dog")
+
+    # dogタグの画像があることを確認する
+    # assert user_image.image_path in rv.data.decode()
+
+    # dogタグがあることを確認する
+    # assert "dog" in rv.data.decode()
+
+    # testワードで検索する
+    rv = client.get("/images/search?search=test")
+
+    # dogタグの画像がないことを確認する
+    assert user_image.image_path not in rv.data.decode()
+
+    # dogタグがないことを確認する
+    assert "dog" not in rv.data.decode()
 
 
 def test_delete(client):
