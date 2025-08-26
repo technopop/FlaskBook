@@ -1,11 +1,15 @@
 from pathlib import Path
+import os
+import secrets
 
 basedir = Path(__file__).parent.parent
 
 
 class BaseConfig:
-    SECRET_KEY = "ZAZSMss3p5QPbcY2hBsJ"
-    WTF_CSRF_SECRET_KEY = "AuwzyszU5sugKN7K2s6f"
+    SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(32)
+    WTF_CSRF_SECRET_KEY = os.environ.get(
+        "WTF_CSRF_SECRET_KEY"
+    ) or secrets.token_urlsafe(32)
     UPLOAD_FOLDER = str(Path(basedir, "apps", "images"))
 
     LABELS = [

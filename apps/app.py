@@ -5,6 +5,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from apps.config import config
 from flask_login import LoginManager
+import os
+import secrets  # ← 追加（開発用のフォールバックに使う）
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
@@ -13,15 +20,24 @@ login_manager.login_view = "auth.signup"
 login_manager.login_message = ""
 
 
-def create_app(config_key):
+def create_app(config_key="development"):
     app = Flask(__name__)
+
     app.config.from_object(config[config_key])
-    app.config.from_mapping(
-        SECRET_KEY="2AZSMss3p5QPbcY2hBsJ",
-        SQLALCHEMY_DATABASE_URI=f"sqlite:///{Path(__file__).parent.parent / 'local.sqlite'}",
+    secret_key = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(32)
+    csrf_key = os.environ.get("WTF_CSRF_SECRET_KEY") or secrets.token_urlsafe(32)
+
+    db_uri = (
+        os.environ.get("DATABASE_URL")  # .envにあればそれを使う
+        or f"sqlite:///{Path(__file__).parent.parent / 'local.sqlite'}"  # なければ従来のsqlite
+    )
+
+    app.config.update(
+        SECRET_KEY=secret_key,
+        WTF_CSRF_SECRET_KEY=csrf_key,
+        SQLALCHEMY_DATABASE_URI=db_uri,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=True,
-        WTF_CSRF_SECRET_KEY="AuwzyszU5sugKN7KZs6f",
     )
 
     db.init_app(app)
