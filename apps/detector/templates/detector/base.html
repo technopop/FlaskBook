@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('detector.index') }}">detector</a>
+            <!--画像検索フォーム-->
+            {% if request.endpoint in ['detector.index', 'detector.search'] %}
+            <div class="btn-group">
+                <form action="{{ url_for('detector.search') }}" method="GET" name="dtSearchForm">
+                    <input type="search" id="dt-search" class="form-control col-md-12 dt-search" placeholder="検索"
+                        name="search" value="{{ request.args.get('search') or '' }}" />
+                </form>
+            </div>
+            {% endif %}
+
+            <ul class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <span class="nav-link">{{ current_user.username }}</span>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('auth.logout') }}" class="nav-link">ログアウト</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.signup') }}">新規登録</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">ログイン</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <section class="container">
+        {% block content %}{% endblock %}
+    </section>
+</body>
+
+</html>
