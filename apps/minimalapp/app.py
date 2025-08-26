@@ -23,7 +23,6 @@ app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
 mail = Mail(app)
 
 # SECRET_KEYを設定
-app.config["SECRET_KEY"] = "2AZSMss3p5QPbcY2hBsJ"
 app.logger.setLevel(logging.DEBUG)
 app.logger.critical("重大なエラー")
 app.logger.error("エラー")
